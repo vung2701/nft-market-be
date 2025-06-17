@@ -3,8 +3,18 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./interfaces/AggregatorV3Interface.sol";
 
-contract Marketplace is ReentrancyGuard {
+contract MarketPlace is ReentrancyGuard {
+    AggregatorV3Interface internal priceFeed;
+
+    constructor() {
+        // ETH/USD price feed on Sepolia
+        priceFeed = AggregatorV3Interface(
+            0x694AA1769357215DE4FAC081bf1f309aDC325306
+        );
+    }
+
     struct Listing {
         address seller;
         address nftAddress;
@@ -77,5 +87,21 @@ contract Marketplace is ReentrancyGuard {
 
     function getListings() external view returns (Listing[] memory) {
         return listings;
+    }
+
+    function getLatestPrice() public view returns (uint256) {
+        (
+            ,
+            /* uint80 roundID */ int256 price /* uint startedAt */ /* uint timeStamp */ /* uint80 answeredInRound */,
+            ,
+            ,
+
+        ) = priceFeed.latestRoundData();
+        return uint256(price);
+    }
+
+    function convertUsdToEth(uint256 usdAmount) public view returns (uint256) {
+        uint256 ethPrice = getLatestPrice();
+        return (usdAmount * 1e18) / ethPrice;
     }
 }
