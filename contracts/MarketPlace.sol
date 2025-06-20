@@ -8,11 +8,9 @@ import "./interfaces/AggregatorV3Interface.sol";
 contract MarketPlace is ReentrancyGuard {
     AggregatorV3Interface internal priceFeed;
 
-    constructor() {
-        // ETH/USD price feed on Sepolia
-        priceFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+    constructor(address _priceFeedAddress) {
+        // ETH/USD price feed - có thể truyền vào address hoặc mock cho test
+        priceFeed = AggregatorV3Interface(_priceFeedAddress);
     }
 
     struct Listing {
@@ -63,12 +61,20 @@ contract MarketPlace is ReentrancyGuard {
         Listing storage listing = listings[_listingId];
 
         require(!listing.isSold, "Already sold");
-        require(msg.value == listing.price, "Incorrect price");
+        
+        // Chuyển đổi USD price sang ETH để so sánh
+        uint256 requiredEth = convertUsdToEth(listing.price);
+        require(msg.value >= requiredEth, "Insufficient ETH sent");
 
         listing.isSold = true;
 
         // Transfer ETH to seller
-        payable(listing.seller).transfer(msg.value);
+        payable(listing.seller).transfer(requiredEth);
+        
+        // Hoàn lại số dư thừa nếu có
+        if (msg.value > requiredEth) {
+            payable(msg.sender).transfer(msg.value - requiredEth);
+        }
 
         // Transfer NFT to buyer
         IERC721(listing.nftAddress).safeTransferFrom(
@@ -102,6 +108,8 @@ contract MarketPlace is ReentrancyGuard {
 
     function convertUsdToEth(uint256 usdAmount) public view returns (uint256) {
         uint256 ethPrice = getLatestPrice();
-        return (usdAmount * 1e18) / ethPrice;
+        // ethPrice có 8 chữ số thập phân từ Chainlink, usdAmount có 8 chữ số thập phân
+        // Kết quả cần 18 chữ số thập phân (wei)
+        return (usdAmount * 1e18) / (ethPrice * 1e2);
     }
 }
