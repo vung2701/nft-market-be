@@ -12,9 +12,13 @@ async function main() {
   await nftCollection.waitForDeployment();
   console.log("NFTCollection deployed to:", nftCollection.target);
 
-  // Deploy Marketplace
-  const Marketplace = await ethers.getContractFactory("Marketplace");
-  const marketplace = await Marketplace.deploy();
+  // Sử dụng Chainlink ETH/USD Price Feed thật trên Sepolia
+  const sepoliaETHUSDPriceFeed = "0x694AA1769357215DE4FAC081bf1f309aDC325306";
+  console.log("Sử dụng Chainlink ETH/USD Price Feed:", sepoliaETHUSDPriceFeed);
+
+  // Deploy Marketplace với Chainlink Price Feed address
+  const Marketplace = await ethers.getContractFactory("MarketPlace");
+  const marketplace = await Marketplace.deploy(sepoliaETHUSDPriceFeed);
   await marketplace.waitForDeployment();
   console.log("Marketplace deployed to:", marketplace.target);
 }

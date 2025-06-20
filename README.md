@@ -71,3 +71,18 @@ scripts/
 - RarityVerification: [đang cập nhật]
 - AutomatedRewards: [đang cập nhật]
 - RewardToken: [đang cập nhật]
+
+Các contract đã được deploy lên Sepolia testnet với dữ liệu thật:
+NFTCollection: 0x809cf41F0697De961B85D3ccF57C24933457d8Dc
+MarketPlace: 0x34a70199FF31F4238f971ec7CF4866BF4006978c
+Chainlink ETH/USD Price Feed: 0x694AA1769357215DE4FAC081bf1f309aDC325306 (official feed)
+🔧 Những thay đổi đã thực hiện:
+Loại bỏ MockPriceFeed: Không cần deploy mock data nữa
+Sử dụng Chainlink Price Feed thật: Địa chỉ chính thức 0x694AA1769357215DE4FAC081bf1f309aDC325306
+Giá ETH/USD thời gian thực: MarketPlace sẽ lấy giá ETH/USD cập nhật liên tục từ Chainlink Oracle
+💡 Lợi ích của việc sử dụng dữ liệu thật:
+✅ Giá cả chính xác và cập nhật theo thời gian thực
+✅ Tin cậy và được đảm bảo bởi mạng Oracle của Chainlink
+✅ Không cần quản lý mock data
+✅ Sẵn sàng cho production
+Bây giờ MarketPlace của bạn sẽ sử dụng giá ETH/USD thật từ Chainlink Oracle thay vì giá cố định $2000 như trước đây!
