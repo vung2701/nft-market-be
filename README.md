@@ -72,17 +72,10 @@ scripts/
 - AutomatedRewards: [đang cập nhật]
 - RewardToken: [đang cập nhật]
 
-Các contract đã được deploy lên Sepolia testnet với dữ liệu thật:
-NFTCollection: 0x809cf41F0697De961B85D3ccF57C24933457d8Dc
-MarketPlace: 0x34a70199FF31F4238f971ec7CF4866BF4006978c
-Chainlink ETH/USD Price Feed: 0x694AA1769357215DE4FAC081bf1f309aDC325306 (official feed)
-🔧 Những thay đổi đã thực hiện:
-Loại bỏ MockPriceFeed: Không cần deploy mock data nữa
-Sử dụng Chainlink Price Feed thật: Địa chỉ chính thức 0x694AA1769357215DE4FAC081bf1f309aDC325306
-Giá ETH/USD thời gian thực: MarketPlace sẽ lấy giá ETH/USD cập nhật liên tục từ Chainlink Oracle
-💡 Lợi ích của việc sử dụng dữ liệu thật:
-✅ Giá cả chính xác và cập nhật theo thời gian thực
-✅ Tin cậy và được đảm bảo bởi mạng Oracle của Chainlink
-✅ Không cần quản lý mock data
-✅ Sẵn sàng cho production
-Bây giờ MarketPlace của bạn sẽ sử dụng giá ETH/USD thật từ Chainlink Oracle thay vì giá cố định $2000 như trước đây!
+Contract Address Chức năng
+RewardToken 0x9cABc4Bf65694A9d13Edf58410519b61B9D8C711 ERC20 token cho rewards (1M supply)
+NFTCollection 0x080a6E8AFfD624f6A09FfBc931546e80F385b20F NFT Collection chính
+MarketPlace 0xde7AF7eF9A17dAf9E79d1D0feFfDe117b7EF25bB Marketplace với Chainlink Oracle
+DynamicPricing 0x8F6b3F68699Ef588F6eC2073B5640C4B3b6E06B1 Tính phí động theo giá ETH/USD
+AutomatedRewards 0x96095eA4Df213f9161a045D25eC93bEDF56d7302 Hệ thống rewards tự động
+RarityVerification 0xaB740a41f0fD011f7632A567909f4EA839EfB786 Xác minh độ hiếm NFT

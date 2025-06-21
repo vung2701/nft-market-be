@@ -1,33 +1,52 @@
 const fs = require("fs");
 const path = require("path");
 
-const CONTRACT_NAME = "MarketPlace"; // Replace with your contract name
+// Danh sách các contract cần export ABI
+const CONTRACTS = [
+  "MarketPlace",
+  "NFTCollection", 
+  "DynamicPricing",
+  "AutomatedRewards",
+  "RarityVerification",
+  "RewardToken"
+];
 
 async function main() {
-  const artifactPath = path.join(
-    __dirname,
-    "..",
-    "artifacts",
-    "contracts",
-    `${CONTRACT_NAME}.sol`,
-    `${CONTRACT_NAME}.json`
-  );
-
-  const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
-
-  const abi = artifact.abi;
-
   const outputDir = path.join(__dirname, "..", "abis");
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  fs.writeFileSync(
-    path.join(outputDir, `${CONTRACT_NAME}.json`),
-    JSON.stringify(abi, null, 2)
-  );
+  for (const contractName of CONTRACTS) {
+    try {
+      const artifactPath = path.join(
+        __dirname,
+        "..",
+        "artifacts",
+        "contracts",
+        `${contractName}.sol`,
+        `${contractName}.json`
+      );
 
-  console.log(`✅ ABI exported to /abis/${CONTRACT_NAME}.json`);
+      if (fs.existsSync(artifactPath)) {
+        const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
+        const abi = artifact.abi;
+
+        fs.writeFileSync(
+          path.join(outputDir, `${contractName}.json`),
+          JSON.stringify(abi, null, 2)
+        );
+
+        console.log(`✅ ABI exported to /abis/${contractName}.json`);
+      } else {
+        console.log(`⚠️ Artifact not found for ${contractName}`);
+      }
+    } catch (error) {
+      console.error(`❌ Error exporting ABI for ${contractName}:`, error.message);
+    }
+  }
+
+  console.log(`\n🎉 Export hoàn thành! Tổng cộng ${CONTRACTS.length} contracts.`);
 }
 
 main().catch((error) => {
